@@ -12,6 +12,8 @@ class CourseController extends Controller
     public function index()
     {
         //
+        $courses = Course::all();
+        return view('laravel.Courses.CoursesIndex',compact('courses'));
     }
 
     /**
@@ -20,6 +22,7 @@ class CourseController extends Controller
     public function create()
     {
         //
+       
     }
 
     /**
@@ -28,6 +31,17 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string', 
+        ]);
+        Task::create([
+            'name'=>$request->name,
+            'description'=>$request->description,
+            
+        ]);
+        return redirect()->route('courses.index');
+    }
     }
 
     /**
@@ -60,5 +74,8 @@ class CourseController extends Controller
     public function destroy(string $id)
     {
         //
+        $course = Course::find($id);
+        $course->delete();
+        return redirect()->route('courses.index');
     }
 }

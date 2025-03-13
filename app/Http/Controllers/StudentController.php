@@ -9,11 +9,22 @@ class StudentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $search = $request->input('search');
+        $query = Student::query();
+        if($search){
+            $query->where('name','LIKE',"%$search%");
+        }
+        $students = $query->get();
+        
+        if ($request->ajax()) {
+            return response()->json($students);
+        }
+        
+        return view('Students.StudentIndex', compact('students')); 
     }
-
     /**
      * Show the form for creating a new resource.
      */
